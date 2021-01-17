@@ -1,0 +1,74 @@
+#!/bin/bash
+
+######################################################################
+#               VPS - Command Line Interface                         #
+#                                                                    #
+#               Author: HIEUDT                                       #
+######################################################################
+
+SCRIPT_URL=""
+
+# VPS Info
+OS_VER=$(lsb_release -rs)
+USER_COMMAND=$(id -u)
+
+# LANG
+ROOT_ERR="Ban can chay script voi user root. Chay lenh \"sudo su\" de co quyen root! hoac sudo bash install"
+COMPATIBLE="VPS-CLI chi ho tro cac he dieu hanh: Ubuntu 16.04"
+CANCEL_INSTALL="Huy cai dat..."
+OS_WRONG="Script chi hoat dong tren \"Ubuntu 20\"!"
+
+# Set Color
+RED='\033[0;31m'
+NC='\033[0m'
+
+
+###################
+#Check conditions #
+###################
+
+# Check if user not root
+checkRoot () {
+    if [[ "$USER_COMMAND" != "0" ]]; then
+        printf "${RED}%s${NC}\n" "${ROOT_ERR}"
+        printf "${RED}%s${NC}\n" "${CANCEL_INSTALL}"
+        exit
+    fi
+}
+
+checkOs () {
+    if [ "$OS_VER" != "16.04" ]; then
+	    printf "${RED}%s${NC}\n" "$COMPATIBLE"
+        printf "${RED}%s${NC}\n" "${CANCEL_INSTALL}"
+    	exit
+    fi
+}
+
+initRequireCheck(){
+    echo ""
+    checkRoot
+    checkOs
+}
+
+installRequirement() {
+    rm -f /etc/localtime
+    ln -sf /usr/share/zoneinfo/Asia/Ho_Chi_Minh /etc/localtime
+    apt-get install curl -y
+}
+
+initial(){
+    clear
+    printf "========================================================\n"
+    echo   "             VPS - Command Line Interface              "
+    echo   "            Auto Install TechStack on Ubuntu           "
+    echo   "                   From HieuDT with <3                 "
+    printf "========================================================\n"
+    echo ""
+    echo "Loading..."
+    sleep 2
+}
+
+
+initial
+initRequireCheck
+installRequirement
