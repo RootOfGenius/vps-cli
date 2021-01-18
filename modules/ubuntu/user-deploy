@@ -1,0 +1,8 @@
+#!/bin/bash
+
+adduser deploy
+su deploy
+mkdir ~/.ssh && vim ~/.ssh/authorized_keys
+exit
+usermod -a -G sudo deploy
+exit

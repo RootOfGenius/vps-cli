@@ -1,0 +1,4 @@
+#!/bin/sh
+
+apt-get install nginx -y -qq
+exit

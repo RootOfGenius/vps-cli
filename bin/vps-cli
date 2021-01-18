@@ -1,3 +1,69 @@
 #!/bin/bash
 
-echo 1
+USER_COMMAND=$(id -u)
+OS_VER=$(lsb_release -rs)
+
+# LANG
+ROOT_ERR="Ban can chay script voi user root. Chay lenh \"sudo su\" de co quyen root! hoac sudo vps-cli"
+COMPATIBLE="VPS-CLI chi ho tro cac he dieu hanh: Ubuntu"
+CANCEL_INSTALL="Huy cai dat..."
+OS_WRONG="Script chi hoat dong tren \"Ubuntu\"!"
+
+clear
+prompt="Nhap vao lua chon menu cua ban:"
+options=("Server Info", "Cai dat Nginx", "Cai dat PHP 7.3", "Cai dat MySQL 8", "Cai dat NodeJS/NPM", "Cai dat Yarn", "Tao user deploy") # End Options
+
+initial(){
+    clear
+    printf "========================================================\n"
+    echo   "             VPS - Command Line Interface              "
+    echo   "            Auto Install TechStack on Ubuntu           "
+    echo   "                   From HieuDT with <3                 "
+    printf "========================================================\n"
+    echo ""
+}
+
+menu() {
+    PS3="$prompt"
+    select opt in "${options[@]}" "Thoat"; do 
+
+        case "$REPLY" in
+            1 ) ../modules/common/info;;
+            2 ) ../modules/ubuntu/nginx;;
+            3 ) ../modules/ubuntu/php7-3;;
+            # End Menu
+
+            $(( ${#options[@]}+1 )) ) printf "\nGoodBye <3\n\n"; break;;
+            *) echo "Ban nhap sai, vui long nhap theo so thu tu tren danh sach";continue;;
+
+        esac
+
+    done
+}
+
+# Check if user not root
+checkRoot () {
+    if [[ "$USER_COMMAND" != "0" ]]; then
+        printf "${RED}%s${NC}\n" "${ROOT_ERR}"
+        printf "${RED}%s${NC}\n" "${CANCEL_INSTALL}"
+        exit
+    fi
+}
+
+checkOs () {
+    if [ "$OS_VER" != "16.04" ]; then
+	    printf "${RED}%s${NC}\n" "$COMPATIBLE"
+        printf "${RED}%s${NC}\n" "${CANCEL_INSTALL}"
+    	exit
+    fi
+}
+
+requireCheck(){
+    echo ""
+    checkRoot
+    checkOs
+}
+
+requireCheck
+initial
+menu

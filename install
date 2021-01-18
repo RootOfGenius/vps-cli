@@ -6,7 +6,7 @@
 #               Author: HIEUDT                                       #
 ######################################################################
 
-SCRIPT_URL=""
+SCRIPT_URL="https://raw.githubusercontent.com/RootOfGenius/vps-cli/main/bin/vps-cli"
 
 # VPS Info
 OS_VER=$(lsb_release -rs)
@@ -17,9 +17,11 @@ ROOT_ERR="Ban can chay script voi user root. Chay lenh \"sudo su\" de co quyen r
 COMPATIBLE="VPS-CLI chi ho tro cac he dieu hanh: Ubuntu 16.04"
 CANCEL_INSTALL="Huy cai dat..."
 OS_WRONG="Script chi hoat dong tren \"Ubuntu 20\"!"
+SETUP_SUCCESS="Cai dat hoan tat! vui long su dung lenh vps-cli de mo menu!"
 
 # Set Color
 RED='\033[0;31m'
+GREEN='\033[0;32m' 
 NC='\033[0m'
 
 
@@ -68,7 +70,25 @@ initial(){
     sleep 2
 }
 
+setup() {
+    rm -rf /bin/vps-cli
+    wget -q $SCRIPT_URL -O /bin/vps-cli && chmod +x /bin/vps-cli
+    rm index.html
+
+    clear
+    printf "========================================================\n"
+    echo   "             VPS - Command Line Interface              "
+    echo   "            Auto Install TechStack on Ubuntu           "
+    echo   "                   From HieuDT with <3                 "
+    printf "========================================================\n"
+    echo ""
+    printf "${GREEN}%s${NC}\n" "${SETUP_SUCCESS}"
+    sleep 2
+    exit
+}
+
 
 initial
 initRequireCheck
 installRequirement
+setup

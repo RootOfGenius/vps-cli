@@ -1,0 +1,29 @@
+#!/bin/sh
+# VPS Info
+OS_VER=$(lsb_release -rs)
+USER_COMMAND=$(id -u)
+RAM_TOTAL=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
+CPU_NAME=$( awk -F: '/model name/ {name=$2} END {print name}' /proc/cpuinfo )
+CPU_CORES=$( awk -F: '/model name/ {core++} END {print core}' /proc/cpuinfo )
+CPU_FREQ=$( awk -F: ' /cpu MHz/ {freq=$2} END {print freq}' /proc/cpuinfo )
+SERVER_RAM_MB=`echo "scale=0;$RAM_TOTAL/1024" | bc`
+SERVER_HDD=$( df -h | awk 'NR==2 {print $2}' )
+SERVER_SWAP_TOTAL=$(awk '/SwapTotal/ {print $2}' /proc/meminfo)
+SERVER_SWAP_MB=`echo "scale=0;$SERVER_SWAP_TOTAL/1024" | bc`
+SERVER_IP=$(curl -s "https://hocvps.com/scripts/ip/")
+
+
+printf "=========================================================================\n"
+printf "Thong so server cua ban nhu sau \n"
+printf "=========================================================================\n"
+echo "OS: $OS_VER"
+echo "Loai CPU : $CPU_NAME"
+echo "Tong so CPU core : $CPU_CORES"
+echo "Toc do moi core : $CPU_FREQ MHz"
+echo "Tong dung luong RAM : $SERVER_RAM_MB MB"
+echo "Tong dung luong swap : $SERVER_SWAP_MB MB"
+echo "Tong dung luong o dia : $SERVER_HDD GB"
+echo "SERVER IP cua ban la: $SERVER_IP "
+printf "=========================================================================\n"
+printf "=========================================================================\n"
+exit
